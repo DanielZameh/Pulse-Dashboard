@@ -4,8 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pulse — Immersive New Tab</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.tailwindcss.com">
+    </script>
+    <script src="https://unpkg.com/lucide@latest">
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -37,6 +39,7 @@
       ::-webkit-scrollbar-thumb:hover {
         background: rgba(255, 255, 255, 0.3);
       }
+
       .glass-card {
         background: rgba(255, 255, 255, 0.05);
         backdrop-filter: blur(24px);
@@ -58,17 +61,46 @@
         -webkit-backdrop-filter: blur(16px);
         border: 1px solid rgba(255, 255, 255, 0.1);
         box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       }
       .glass-input:focus-within {
         background: rgba(255, 255, 255, 0.08);
         border-color: rgba(255, 255, 255, 0.3);
-        box-shadow: 0 25px 30px -5px rgba(0, 0, 0, 0.6);
+        box-shadow: 0 25px 30px -5px rgba(0, 0, 0, 0.6), 0 0 40px rgba(99, 102, 241, 0.08);
+        transform: scale(1.01);
       }
       .glass-modal {
         background: rgba(5, 5, 5, 0.85);
         backdrop-filter: blur(32px);
         -webkit-backdrop-filter: blur(32px);
         border: 1px solid rgba(255, 255, 255, 0.15);
+      }
+
+      /* subtle clock pulse */
+      @keyframes clockPulse {
+        0%,
+        100% {
+          opacity: 0.92;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+      #clockTime {
+        animation: clockPulse 4s ease-in-out infinite;
+      }
+
+      /* search hint fade */
+      .search-hint {
+        transition: opacity 0.25s ease;
+      }
+      .glass-input:focus-within .search-hint {
+        opacity: 0.4;
+      }
+
+      /* tiny glow for the logo dot */
+      .logo-glow {
+        box-shadow: 0 0 20px rgba(129, 140, 248, 0.15);
       }
     </style>
   </head>
@@ -83,10 +115,11 @@
     <div class="relative z-10 flex flex-col min-h-screen px-6 py-8 sm:px-12 max-w-7xl mx-auto w-full">
       <header class="flex items-center justify-between w-full mb-8">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-2xl glass-card flex items-center justify-center text-white shadow-xl">
+          <div class="w-10 h-10 rounded-2xl glass-card flex items-center justify-center text-white shadow-xl logo-glow">
             <i data-lucide="activity" class="w-5 h-5 text-indigo-400"></i>
           </div>
           <span class="font-display font-semibold text-xl tracking-wider text-white/90">PULSE</span>
+          <span class="text-[10px] font-mono tracking-widest text-indigo-400/50 ml-1">✦</span>
         </div>
         <div class="flex items-center gap-3">
           <button id="bgRefreshBtn" title="New Background" class="p-3 rounded-2xl glass-card text-white/60 hover:text-white hover:bg-white/10 transition">
@@ -121,13 +154,14 @@
               <i data-lucide="search" class="w-5 h-5"></i>
             </div>
             <input
-              type="text"
-              id="searchInput"
-              placeholder="Search the web or type a URL..."
-              autocomplete="off"
-              class="w-full bg-transparent px-5 py-3 text-lg font-light text-white placeholder:text-white/20 focus:outline-none"
+            type="text"
+            id="searchInput"
+            placeholder="Search the web or type a URL…"
+            autocomplete="off"
+            class="w-full bg-transparent px-5 py-3 text-lg font-light text-white placeholder:text-white/20 focus:outline-none"
             />
-            <div class="hidden sm:flex items-center pr-2">
+            <div class="hidden sm:flex items-center gap-2 pr-2">
+              <span class="search-hint text-[10px] font-mono tracking-widest text-white/20 uppercase opacity-60">⌘K</span>
               <span class="text-xs font-mono tracking-widest text-white/20 uppercase">Enter</span>
             </div>
           </div>
@@ -138,14 +172,14 @@
               <h3 class="text-xs font-semibold uppercase tracking-[0.2em] text-white/40">Weather</h3>
               <button id="weatherLocBtn" class="text-xs text-white/40 hover:text-white transition flex items-center gap-1">
                 <i data-lucide="map-pin" class="w-3 h-3"></i>
-                <span id="weatherLocName">Detecting...</span>
+                <span id="weatherLocName">Detecting…</span>
               </button>
             </div>
             <div id="weatherContent" class="flex flex-col justify-between flex-1">
               <div class="flex items-center justify-between my-auto">
                 <div>
                   <div class="text-5xl font-light font-display text-white" id="weatherTemp">--°C</div>
-                  <div class="text-xs text-white/60 mt-2 capitalize" id="weatherDesc">Fetching forecast...</div>
+                  <div class="text-xs text-white/60 mt-2 capitalize" id="weatherDesc">Fetching forecast…</div>
                 </div>
                 <div id="weatherIconContainer" class="p-4 rounded-2xl bg-white/5 text-blue-400">
                   <i data-lucide="sun" class="w-10 h-10"></i>
@@ -159,17 +193,17 @@
           </div>
           <div class="glass-card rounded-[32px] p-8 flex flex-col justify-between h-[280px]">
             <div class="flex items-center justify-between mb-4">
-              <h3 class="text-xs font-semibold uppercase tracking-[0.2em] text-white/40">Daily Focus</h3>
+              <h3 class="text-xs font-semibold uppercase tracking-[0.2em] text-white/40">Today's Focus</h3>
               <button id="focusClearBtn" class="text-xs text-white/40 hover:text-rose-400 transition hidden">
                 Clear
               </button>
             </div>
             <div id="focusInputContainer" class="my-auto">
               <input
-                type="text"
-                id="focusInput"
-                placeholder="What is your main focus today?"
-                class="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-sm text-white placeholder-white/20 focus:outline-none focus:border-white/30"
+              type="text"
+              id="focusInput"
+              placeholder="What's the one thing you want to accomplish?"
+              class="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-sm text-white placeholder-white/20 focus:outline-none focus:border-white/30"
               />
             </div>
             <div id="focusDisplayContainer" class="hidden my-auto">
@@ -228,10 +262,10 @@
           <form id="todoForm" class="mb-6">
             <div class="flex items-center gap-3">
               <input
-                type="text"
-                id="todoInput"
-                placeholder="Add a new task..."
-                class="flex-1 bg-white/5 border border-white/10 rounded-2xl px-5 py-3 text-sm text-white placeholder-white/20 focus:outline-none focus:border-white/30"
+              type="text"
+              id="todoInput"
+              placeholder="Add a new task…"
+              class="flex-1 bg-white/5 border border-white/10 rounded-2xl px-5 py-3 text-sm text-white placeholder-white/20 focus:outline-none focus:border-white/30"
               />
               <button type="submit" class="px-5 py-3 bg-indigo-600/80 hover:bg-indigo-500 text-white rounded-2xl text-sm font-medium transition flex items-center justify-center">
                 <i data-lucide="plus" class="w-4 h-4"></i>
@@ -243,9 +277,9 @@
         </div>
       </main>
       <footer class="mt-12 w-full flex flex-col sm:flex-row justify-between items-center gap-4 text-[10px] font-mono tracking-[0.3em] uppercase text-white/30 border-t border-white/10 pt-6">
-        <div>System: Pulse / Immersive UI</div>
+        <div>System: Pulse / Custom Build</div>
         <div id="bgPhotoCredits" class="text-white/30">Background via Unsplash</div>
-        <div>V 2.4.0</div>
+        <div>V 2.5.0</div>
       </footer>
     </div>
     <div id="settingsModal" class="fixed inset-0 bg-black/70 backdrop-blur-xl z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
@@ -368,6 +402,7 @@
         { text: "Do what you can, with what you have, where you are.", author: "Teddy Roosevelt" },
         { text: "Small daily improvements over time lead to stunning results.", author: "Robin Sharma" }
       ];
+
       function getStorage(key, fallback) {
         try {
           const item = localStorage.getItem(key);
@@ -376,21 +411,25 @@
           return fallback;
         }
       }
+
       function setStorage(key, value) {
         try {
           localStorage.setItem(key, JSON.stringify(value));
         } catch (e) {}
       }
+
       let state = getStorage('pulse_settings', defaultState);
       let shortcuts = getStorage('pulse_shortcuts', defaultShortcuts);
       let todos = getStorage('pulse_todos', []);
       let focusData = getStorage('pulse_focus', { text: '', completed: false });
       let currentBgIndex = 0;
+
       function initIcons() {
         if (window.lucide) {
           window.lucide.createIcons();
         }
       }
+
       function updateClock() {
         const now = new Date();
         const hours24 = now.getHours();
@@ -411,16 +450,19 @@
         else if (hours24 >= 22 || hours24 < 5) greeting = 'Good night';
         document.getElementById('greetingTime').textContent = greeting;
       }
+
       function applyBackground() {
         const cat = bgCollections[state.bgCategory] || bgCollections.nature;
         const url = cat[currentBgIndex % cat.length];
         document.getElementById('bgImage').style.backgroundImage = `url('${url}')`;
       }
+
       function cycleBackground() {
         const cat = bgCollections[state.bgCategory] || bgCollections.nature;
         currentBgIndex = (currentBgIndex + 1) % cat.length;
         applyBackground();
       }
+
       function renderShortcuts() {
         const container = document.getElementById('shortcutsGrid');
         container.innerHTML = '';
@@ -428,28 +470,29 @@
           let domain = '';
           try {
             domain = new URL(item.url).hostname;
-          } catch(e) {
+          } catch (e) {
             domain = item.url;
           }
           const faviconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
           const card = document.createElement('div');
           card.className = 'group relative flex flex-col items-center justify-center p-4 rounded-2xl glass-card glass-card-hover cursor-pointer';
           card.innerHTML = `
-            <button data-id="${item.id}" class="shortcut-del-btn absolute top-1.5 right-1.5 opacity-0 group-hover:opacity-100 p-1 text-white/40 hover:text-rose-400 transition">
-              <i data-lucide="x" class="w-3 h-3"></i>
-            </button>
-            <a href="${item.url}" target="_blank" rel="noopener noreferrer" class="flex flex-col items-center gap-2.5 w-full text-center">
-              <div class="w-12 h-12 rounded-2xl bg-white/10 p-2.5 flex items-center justify-center overflow-hidden group-hover:bg-white/20 transition-all border border-white/10">
-                <img src="${faviconUrl}" alt="${item.title}" class="w-6 h-6 object-contain" onError="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                <span class="hidden text-sm font-semibold text-white uppercase">${item.title.charAt(0)}</span>
-              </div>
-              <span class="text-[10px] uppercase tracking-widest text-white/60 truncate w-full group-hover:text-white transition">${item.title}</span>
-            </a>
-          `;
+              <button data-id="${item.id}" class="shortcut-del-btn absolute top-1.5 right-1.5 opacity-0 group-hover:opacity-100 p-1 text-white/40 hover:text-rose-400 transition">
+                <i data-lucide="x" class="w-3 h-3"></i>
+              </button>
+              <a href="${item.url}" target="_blank" rel="noopener noreferrer" class="flex flex-col items-center gap-2.5 w-full text-center">
+                <div class="w-12 h-12 rounded-2xl bg-white/10 p-2.5 flex items-center justify-center overflow-hidden group-hover:bg-white/20 transition-all border border-white/10">
+                  <img src="${faviconUrl}" alt="${item.title}" class="w-6 h-6 object-contain" onError="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                  <span class="hidden text-sm font-semibold text-white uppercase">${item.title.charAt(0)}</span>
+                </div>
+                <span class="text-[10px] uppercase tracking-widest text-white/60 truncate w-full group-hover:text-white transition">${item.title}</span>
+              </a>
+            `;
           container.appendChild(card);
         });
         initIcons();
       }
+
       function renderTodos() {
         const list = document.getElementById('todoList');
         list.innerHTML = '';
@@ -461,25 +504,27 @@
         });
         document.getElementById('taskCountBadge').textContent = todos.filter(t => !t.completed).length;
         if (filtered.length === 0) {
-          list.innerHTML = `<li class="text-center text-xs font-mono tracking-widest uppercase text-white/30 py-6">No tasks found</li>`;
+          list.innerHTML =
+            `<li class="text-center text-xs font-mono tracking-widest uppercase text-white/30 py-6">No tasks found</li>`;
           return;
         }
         filtered.forEach(todo => {
           const li = document.createElement('li');
           li.className = 'flex items-center justify-between p-3 rounded-2xl bg-white/5 border border-white/10 hover:border-white/20 transition group';
           li.innerHTML = `
-            <label class="flex items-center gap-3 cursor-pointer flex-1 min-w-0">
-              <input type="checkbox" data-id="${todo.id}" ${todo.completed ? 'checked' : ''} class="todo-check-btn rounded bg-white/10 border-white/20 text-indigo-500 focus:ring-0 w-4 h-4 cursor-pointer accent-indigo-500">
-              <span class="text-xs font-medium ${todo.completed ? 'line-through text-white/30' : 'text-white/80'} truncate group-hover:text-white transition">${escapeHtml(todo.text)}</span>
-            </label>
-            <button data-id="${todo.id}" class="todo-del-btn opacity-0 group-hover:opacity-100 p-1 text-white/40 hover:text-rose-400 transition">
-              <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-            </button>
-          `;
+              <label class="flex items-center gap-3 cursor-pointer flex-1 min-w-0">
+                <input type="checkbox" data-id="${todo.id}" ${todo.completed ? 'checked' : ''} class="todo-check-btn rounded bg-white/10 border-white/20 text-indigo-500 focus:ring-0 w-4 h-4 cursor-pointer accent-indigo-500">
+                <span class="text-xs font-medium ${todo.completed ? 'line-through text-white/30' : 'text-white/80'} truncate group-hover:text-white transition">${escapeHtml(todo.text)}</span>
+              </label>
+              <button data-id="${todo.id}" class="todo-del-btn opacity-0 group-hover:opacity-100 p-1 text-white/40 hover:text-rose-400 transition">
+                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+              </button>
+            `;
           list.appendChild(li);
         });
         initIcons();
       }
+
       function renderFocus() {
         const inputContainer = document.getElementById('focusInputContainer');
         const displayContainer = document.getElementById('focusDisplayContainer');
@@ -503,12 +548,14 @@
           clearBtn.classList.add('hidden');
         }
       }
+
       function getRandomQuote() {
         const idx = Math.floor(Math.random() * quotes.length);
         const q = quotes[idx];
         document.getElementById('quoteText').textContent = `"${q.text}"`;
         document.getElementById('quoteAuthor').textContent = `— ${q.author}`;
       }
+
       async function fetchWeather(cityOrLat, lon) {
         try {
           let lat, lng, cityName = state.defaultCity;
@@ -517,7 +564,9 @@
             lng = lon;
             cityName = 'Current Location';
           } else {
-            const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(cityOrLat)}&count=1&language=en&format=json`);
+            const geoRes = await fetch(
+              `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(cityOrLat)}&count=1&language=en&format=json`
+              );
             const geoData = await geoRes.json();
             if (geoData.results && geoData.results.length > 0) {
               lat = geoData.results[0].latitude;
@@ -530,7 +579,9 @@
             }
           }
           document.getElementById('weatherLocName').textContent = cityName;
-          const wRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current_weather=true&hourly=relative_humidity_2m`);
+          const wRes = await fetch(
+            `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current_weather=true&hourly=relative_humidity_2m`
+            );
           const wData = await wRes.json();
           if (wData.current_weather) {
             const temp = Math.round(wData.current_weather.temperature);
@@ -546,10 +597,11 @@
             iconContainer.innerHTML = `<i data-lucide="${condition.icon}" class="w-10 h-10"></i>`;
             initIcons();
           }
-        } catch(e) {
+        } catch (e) {
           document.getElementById('weatherDesc').textContent = 'Forecast unavailable';
         }
       }
+
       function decodeWeatherCode(code) {
         if (code === 0) return { desc: 'Clear sky', icon: 'sun' };
         if (code >= 1 && code <= 3) return { desc: 'Partly cloudy', icon: 'cloud-sun' };
@@ -560,6 +612,7 @@
         if (code >= 95) return { desc: 'Thunderstorm', icon: 'cloud-lightning' };
         return { desc: 'Clear', icon: 'sun' };
       }
+
       function detectGeolocation() {
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(
@@ -570,21 +623,25 @@
           fetchWeather(state.defaultCity);
         }
       }
+
       function escapeHtml(str) {
         return str.replace(/[&<>"']/g, function(m) {
-          return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
+          return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' } [m];
         });
       }
+
       function openModal(modalId) {
         const modal = document.getElementById(modalId);
         modal.classList.remove('opacity-0', 'pointer-events-none');
         modal.querySelector('.glass-modal').classList.remove('scale-95');
       }
+
       function closeModal(modalId) {
         const modal = document.getElementById(modalId);
         modal.classList.add('opacity-0', 'pointer-events-none');
         modal.querySelector('.glass-modal').classList.add('scale-95');
       }
+
       document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('userNameBtn').textContent = state.name;
         document.getElementById('formatBadge').textContent = state.timeFormat === '12' ? '12H' : '24H';
@@ -596,6 +653,7 @@
         renderFocus();
         getRandomQuote();
         detectGeolocation();
+
         document.getElementById('userNameBtn').addEventListener('click', () => {
           document.getElementById('settingNameInput').value = state.name;
           document.getElementById('settingCityInput').value = state.defaultCity;
@@ -603,6 +661,7 @@
           document.getElementById('settingBgCategorySelect').value = state.bgCategory;
           openModal('settingsModal');
         });
+
         document.getElementById('settingsOpenBtn').addEventListener('click', () => {
           document.getElementById('settingNameInput').value = state.name;
           document.getElementById('settingCityInput').value = state.defaultCity;
@@ -610,7 +669,9 @@
           document.getElementById('settingBgCategorySelect').value = state.bgCategory;
           openModal('settingsModal');
         });
+
         document.getElementById('settingsCloseBtn').addEventListener('click', () => closeModal('settingsModal'));
+
         document.getElementById('settingsSaveBtn').addEventListener('click', () => {
           state.name = document.getElementById('settingNameInput').value.trim() || 'Friend';
           state.defaultCity = document.getElementById('settingCityInput').value.trim() || 'London';
@@ -622,15 +683,18 @@
           fetchWeather(state.defaultCity);
           closeModal('settingsModal');
         });
+
         document.getElementById('timeFormatToggle').addEventListener('click', () => {
           state.timeFormat = state.timeFormat === '12' ? '24' : '12';
           document.getElementById('formatBadge').textContent = state.timeFormat === '12' ? '12H' : '24H';
           setStorage('pulse_settings', state);
           updateClock();
         });
+
         document.getElementById('bgRefreshBtn').addEventListener('click', cycleBackground);
         document.getElementById('quoteRefreshBtn').addEventListener('click', getRandomQuote);
         document.getElementById('weatherLocBtn').addEventListener('click', detectGeolocation);
+
         document.getElementById('searchForm').addEventListener('submit', (e) => {
           e.preventDefault();
           const query = document.getElementById('searchInput').value.trim();
@@ -642,12 +706,18 @@
             }
           }
         });
+
         document.addEventListener('keydown', (e) => {
+          if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+            e.preventDefault();
+            document.getElementById('searchInput').focus();
+          }
           if (e.key === '/' && document.activeElement.tagName !== 'INPUT') {
             e.preventDefault();
             document.getElementById('searchInput').focus();
           }
         });
+
         document.getElementById('focusInput').addEventListener('keypress', (e) => {
           if (e.key === 'Enter') {
             const val = e.target.value.trim();
@@ -658,19 +728,23 @@
             }
           }
         });
+
         document.getElementById('focusCheckbox').addEventListener('change', (e) => {
           focusData.completed = e.target.checked;
           setStorage('pulse_focus', focusData);
           renderFocus();
         });
+
         document.getElementById('focusClearBtn').addEventListener('click', () => {
           focusData = { text: '', completed: false };
           setStorage('pulse_focus', focusData);
           document.getElementById('focusInput').value = '';
           renderFocus();
         });
+
         document.getElementById('addShortcutBtn').addEventListener('click', () => openModal('shortcutModal'));
         document.getElementById('shortcutCloseBtn').addEventListener('click', () => closeModal('shortcutModal'));
+
         document.getElementById('shortcutForm').addEventListener('submit', (e) => {
           e.preventDefault();
           const title = document.getElementById('shortcutTitleInput').value.trim();
@@ -687,6 +761,7 @@
             closeModal('shortcutModal');
           }
         });
+
         document.getElementById('shortcutsGrid').addEventListener('click', (e) => {
           const btn = e.target.closest('.shortcut-del-btn');
           if (btn) {
@@ -698,6 +773,7 @@
             renderShortcuts();
           }
         });
+
         document.getElementById('todoForm').addEventListener('submit', (e) => {
           e.preventDefault();
           const input = document.getElementById('todoInput');
@@ -709,6 +785,7 @@
             renderTodos();
           }
         });
+
         document.getElementById('todoList').addEventListener('click', (e) => {
           const delBtn = e.target.closest('.todo-del-btn');
           if (delBtn) {
@@ -729,6 +806,7 @@
             }
           }
         });
+
         document.querySelectorAll('.task-filter-btn').forEach(btn => {
           btn.addEventListener('click', () => {
             document.querySelectorAll('.task-filter-btn').forEach(b => {
@@ -741,6 +819,7 @@
             renderTodos();
           });
         });
+
         initIcons();
       });
     </script>
