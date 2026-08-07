@@ -1,0 +1,145 @@
+body {
+  background: #0b0b0b;
+  color: #e5e5e5;
+  margin: 0;
+  padding: 24px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+main {
+  width: 100%;
+  max-width: 880px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+}
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+.branding-text {
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 1px;
+}
+.time-toggle-btn {
+  background: #141414;
+  border: 1px solid #222;
+  color: #737373;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 11px;
+  transition: border-color 0.2s, color 0.2s;
+}
+.time-toggle-btn:hover {
+  border-color: #444;
+  color: #fff;
+}
+.clock-display-area {
+  text-align: center;
+  margin-bottom: 24px;
+}
+.digital-clock-face {
+  font-size: 72px;
+  font-weight: 300;
+  letter-spacing: -2px;
+  margin-bottom: 4px;
+}
+.calendar-date-label {
+  color: #737373;
+  font-size: 13px;
+}
+.search-container-box {
+  margin-bottom: 24px;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+.search-text-input {
+  width: 100%;
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: #fff;
+  outline: none;
+  font-size: 14px;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+.search-text-input:focus {
+  border-color: #818cf8;
+}
+.widgets-grid-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.widget-card-panel {
+  background: #141414;
+  border: 1px solid #222;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+.widget-header-title {
+  font-size: 10px;
+  text-transform: uppercase;
+  color: #737373;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+}
+.temperature-value-display {
+  font-size: 22px;
+  font-weight: 600;
+}
+.location-name-display {
+  font-size: 11px;
+  color: #737373;
+  margin-top: 4px;
+}
+.bottom-grid-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.quick-links-container {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.dynamic-link-anchor {
+  font-size: 11px;
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  padding: 4px 8px;
+  border-radius: 4px;
+  color: #a3a3a3;
+  text-decoration: none;
+  transition: border-color 0.2s, color 0.2s;
+}
+.dynamic-link-anchor:hover {
+  border-color: #818cf8;
+  color: #fff;
+}
+.task-list-element {
+  list-style: none;
+  font-size: 11px;
+  color: #a3a3a3;
+  padding: 0;
+  margin: 0;
+}
+.task-item-line {
+  margin-bottom: 4px;
+}
